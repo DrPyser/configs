@@ -1,0 +1,27 @@
+#PATH
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$HOME/bin:$HOME/.local/bin:$PATH"
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+export LANG=en_CA.UTF-8
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='emax'
+else
+  export EDITOR='emacsd'
+fi
+
+export ALTERNATE_EDITOR=""
+export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI with non-daemon as alternate
+
+export EMAIL="schok53@gmail.com"
+export NAME="Charles Langlois"
+export SMTPSERVER="smtp.gmail.com"
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"

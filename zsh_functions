@@ -1,0 +1,17 @@
+
+#emacs functions
+emax () {
+    emacsclient -t "$@"
+}
+
+emacsc () {
+    emacsclient -c -a emacs "$@"
+}
+
+emacsf () {
+    emacsclient -c "$@"
+}
+
+semax () {
+    sudo emacsclient -t "$@"
+}
