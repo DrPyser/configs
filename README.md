@@ -11,6 +11,6 @@ Contains:
 * emacs config file (emacs)
   * requires packages:
 
-* caps lock to modkey config (Xmodmap)
+* caps lock as modkey config (Xmodmap)
 * i3 config (config/i3/config)
 * i3 status config (config/i3status/config)
