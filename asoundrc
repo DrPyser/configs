@@ -1,1 +1,75 @@
-pcm.!default front:Pro
+pcm.!default {
+    type hw
+    card 2
+}
+
+ctl.!default {
+    type hw           
+    card 2
+}
+
+pcm.usb-audio {
+    type hw
+    card 2
+}
+
+
+ctl.usb-audio {
+    type hw
+    card 2
+}
+
+pcm.softvol {
+    type softvol
+    slave {
+    pcm "dmix"
+    }
+    control {
+    name "Master"
+    card 0
+    }
+}
+       
+pcm.!default {
+    type plug
+    slave.pcm "softvol"
+}
+
+pcm.pulse-jack {
+    type pulse
+    device "jack_out"
+    fallback "pulse-fastrack-pro"
+}
+
+pcm.pulse-fastrack-pro {
+    type pulse
+    device "alsa_output.usb-M-Audio_FastTrack_Pro-00.analog-stereo-a-output"
+    fallback "pulse-builtin"
+}
+
+pcm.pulse-builtin {
+    type pulse
+    device "alsa_output.pci-0000_00_1b.0.analog-stereo"
+}
+
+ctl.pulse-jack {
+    type pulse
+    device "jack_out"
+    fallback "pulse-fastrack-pro"
+}
+
+ctl.pulse-fastrack-pro {
+    type pulse
+    device "alsa_output.usb-M-Audio_FastTrack_Pro-00.analog-stereo-a-output"
+    fallback "pulse-builtin"
+}
+
+ctl.pulse-builtin {
+    type pulse
+    device "alsa_output.pci-0000_00_1b.0.analog-stereo"
+}
+
+
+
+
+

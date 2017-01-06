@@ -9,18 +9,22 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+#exec --no-startup-id "setxkbmap -layout ca,en,ca(multix) -option grp:alt_caps_toggle"
+#exec --no-startup-id "xmodmap /home/drpyser/.Xmodmap"
+
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:Terminus 11px
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
 # Before i3 v4.8, we used to recommend this one as the default:
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1 display 10
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, its unicode glyph coverage is limited, the old
 # X core fonts rendering does not support right-to-left and this being a bitmap
@@ -37,7 +41,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+bindsym $mod+d exec dmenu_run -l 10 -p "Run: "
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -168,14 +172,20 @@ bindsym $mod+Pause mode "$mode_system"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+        status_command i3blocks
 }
 
 
-# Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# change volume or toggle mute
+bindsym XF86AudioRaiseVolume exec amixer -q -D pulse sset Master 5%+ && pkill -RTMIN+1 i3blocks 
+bindsym XF86AudioLowerVolume exec amixer -q -D pulse sset Master 5%- && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioMute exec amixer -q -D pulse sset Master toggle && pkill -RTMIN+1
+
+# # Pulse Audio controls
+# bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+# bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+# bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
@@ -187,6 +197,9 @@ bindsym $mod+i exec --no-startup-id i3-input
 # network manager
 
 exec --no-startup-id nm-applet
+
+# wicd
+# exec --no-startup-id wicd-client
 
 # exec dbus-launch --exit-with-session i3
 
@@ -200,7 +213,12 @@ bindsym $mod+Shift+minus move scratchpad
 # Show the first scratchpad window
 bindsym $mod+minus scratchpad show
 
+bindsym Print exec "scrot ~/Pictures/Screenshot%Y-%m-%d%H-%M-%S.png"
+
+bindsym Mod1+Print exec scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f' "~/Pictures/Screenshot%Y-%m-%d%H-%M-%S.png"
+
 # Start editor
 bindsym $mod+t exec emacsd
 
 exec --no-startup-id exec emacs -daemon
+
