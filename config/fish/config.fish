@@ -15,8 +15,8 @@ set -x PATH "/home/drpyser/anaconda2/bin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" 
 
 
 # xmodmap /home/drpyser/.Xmodmap
-setxkbmap -layout ca,en,"ca(multix)"
-setxkbmap -option caps:hyper terminate:ctrl_alt_bksp
+setxkbmap -layout ca
+setxkbmap -option caps:hyper -option terminate:ctrl_alt_bksp
 # xinput set-prop 13 280 1
 
 
