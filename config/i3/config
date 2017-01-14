@@ -157,7 +157,7 @@ bindsym $mod+r mode "resize"
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
 
 mode "$mode_system" {
-        bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+        bindsym Shift+s exec --no-startup-id i3exit.sh shutdown, mode "default"
 	bindsym e exec --no-startup-id i3exit.sh logout, mode "default"
 	bindsym s exec --no-startup-id i3exit.sh suspend, mode "default"
 	bindsym r exec --no-startup-id i3exit.sh reboot, mode "default"
@@ -213,12 +213,37 @@ bindsym $mod+Shift+minus move scratchpad
 # Show the first scratchpad window
 bindsym $mod+minus scratchpad show
 
+# marks
+bindsym $mod+m exec i3-input -F 'mark --toggle --add %s' -P 'Mark: '
+bindsym $mod+n exec i3-input -F '[con_mark="%s"] focus' -P 'Go to: '
+
+##screenshot 
 bindsym Print exec "scrot ~/Pictures/Screenshot%Y-%m-%d%H-%M-%S.png"
 
-bindsym Mod1+Print exec scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f' "~/Pictures/Screenshot%Y-%m-%d%H-%M-%S.png"
+bindsym Mod1+Print exec scrot -s -e 'mv $f /tmp && gimp /tmp/`basename $f`' "/home/drpyser/Pictures/Screenshot%Y-%m-%d%H-%M-%S.png"
 
 # Start editor
 bindsym $mod+t exec emacsd
 
-exec --no-startup-id exec emacs -daemon
+# edit config
+bindsym $mod+Ctrl+c exec $HOME/bin/emacsc "/home/drpyser/.config/i3/config"
 
+# emacs daemon
+exec --no-startup-id emacs -daemon
+
+# urxvt daemon
+exec --no-startup-id urxvtd -q -f -o
+
+# startup application windows to be swallowed by layout
+
+exec --no-startup-id admin.fish
+
+# exec --no-startup-id urxvt -title root -e su -
+# exec --no-startup-id urxvt -name htop -title htop -e htop
+# exec --no-startup-id urxvt -title terminal
+
+# load saved layout, should swallow the windows
+exec --no-startup-id i3-msg 'workspace 1; append_layout /home/drpyser/.config/i3/admin.json;'
+
+# start pulseaudio
+exec --no-startup-id start-pulseaudio-x11

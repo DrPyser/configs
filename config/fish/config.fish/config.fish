@@ -10,12 +10,13 @@ set -x PYO_SERVER_AUDIO "jack"
 set -x PYO_PATH "$HOME/pyo"
 set -x PYTHONPATH "/home/drpyser/repositories/pyo/pyolib/:/home/drpyser/repositories/pyo/pyolib/custom"
 set -x LD_LIBRARY_PATH /usr/lib64 /home/drpyser/anaconda2/lib/ /usr/local/lib64/ $LD_LIBRARY_PATH
-set -x PATH "/home/drpyser/anaconda2/bin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "$HOME/bin" "$HOME/.local/bin" "$HOME/apache-maven/apache-maven-3.3.9/bin" "/usr/java/jdk1.8.0_102/bin" $PATH
+set -x PLAN9 /usr/local/plan9/plan9port
+set -x PATH "/home/drpyser/anaconda2/bin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "$HOME/bin" "$HOME/.local/bin" "$HOME/apache-maven/apache-maven-3.3.9/bin" "/usr/java/jdk1.8.0_102/bin" $PLAN9/bin $PATH
 
 
 # xmodmap /home/drpyser/.Xmodmap
-setxkbmap -option caps:hyper
-setxkbmap -layout ca
+setxkbmap -layout ca,en,"ca(multix)"
+setxkbmap -option caps:hyper terminate:ctrl_alt_bksp
 # xinput set-prop 13 280 1
 
 
@@ -25,5 +26,7 @@ alias up "cd .."
 if test -f $HOME/.dircolors
    . $HOME/.dircolors
 end  
-        
-   
+
+xrdb -merge ~/.Xresources;
+
+facts | cowsay   
