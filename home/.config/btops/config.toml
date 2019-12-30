@@ -1,0 +1,7 @@
+min = 4
+remove-empty = true
+append-when-occupied = true
+renamers = ["static", "numeric"]
+
+[names]
+static = ["admin", "web", "code"]
