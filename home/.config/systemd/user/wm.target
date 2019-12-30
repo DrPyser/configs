@@ -1,0 +1,4 @@
+[Unit]
+Requires=xsession.target
+BindsTo=xsession.target
+

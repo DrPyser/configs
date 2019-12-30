@@ -1,0 +1,152 @@
+super + Return
+	st
+
+super + shift + Return
+	bspc rule -a \* -o state=floating sticky=on focus=on; st
+
+super + alt + Return
+	bspc rule -a \* -o state=floating sticky=on focus=on;\ 
+	st sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x 2>&1'
+
+super + @space
+	bspc rule -a \* -o focus=on; dmenu_run -b
+
+super + Escape
+	pkill -USR1 -x sxhkd
+
+
+XF86MonBrightnessUp
+	brightnessctl s 5%+
+
+XF86MonBrightnessDown
+	brightnessctl s 5%-
+
+super + shift + r
+	bspc rule \* -o state=floating sticky=on focus=on; st sudo nixos-rebuild switch
+	
+
+XF86Bluetooth
+	state=$(bluetoothctl -- show | grep -Eoi 'powered: (yes|no)' | cut -d' ' -f2)\
+	case $state in "yes") bluetoothctl -- power off;; "no") bluetoothctl -- power on;; *) echo "unknown bluetooth power state" >2; bluetoothctl -- power on;; esac
+	
+
+super + Delete
+	case $(echo -e 'poweroff\nreboot\nsuspend\n' | dmenu) in poweroff) systemctl poweroff;; suspend) systemctl suspend;; reboot) systemctl reboot;; esac
+
+#
+# bspwm hotkeys
+#
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# close and kill
+super + {_,shift + }w
+	bspc node -{c,k}
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
+
+# send the newest marked node to the newest preselected node
+super + y
+	bspc node newest.marked.local -n newest.!automatic.local
+
+# swap the current node and the biggest node
+super + g
+	bspc node -s biggest
+
+#
+# state/flags
+#
+
+# set the window state
+super + f; {t,shift + t,s,f}
+	bspc node -t {~tiled,~pseudo_tiled,~floating,~fullscreen}
+
+# set the node flags
+super + shift + f; {m,l,p,s}
+	bspc node -g {marked,locked,private,sticky}
+
+#
+# focus/swap
+#
+
+# focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus the node for the given path jump
+super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+# focus the next/previous node in the current desktop
+super + {_,shift + }c
+	bspc node -f {next,prev}.local
+
+# focus the next/previous desktop in the current monitor
+super + @bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# focus the last node/desktop
+super + {@dead_grave,Tab}
+	bspc {node,desktop} -f last
+
+# focus the older or newer node in the focus history
+super + {o,i}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+super + {_,shift + }d
+	DESKTOP=$(for m in $(bspc query -M --names); do bspc query -D --names -m $m | xargs -Id echo "$m:d"; done | dmenu -b | cut -d':' -f2);\
+	bspc {desktop -f,node focused -d} $DESKTOP
+
+
+# focus window selected by title
+super + v
+	WINDOW=$(python $HOME/bin/select_window.py -b -l 10 | tail -n1);\
+	ERROR=$(bspc node -f $WINDOW 2>&1) || notify-send "Error!" "$WINDOW $ERROR"
+
+
+# preselect
+#
+
+# preselect the direction
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# preselect the ratio
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+super + ctrl + space
+	bspc node -p cancel
+
+# cancel the preselection for the focused desktop
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+#
+# move/resize
+#
+
+# expand a window by moving one of its side outward
+super + alt + {h,j,k,l}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# contract a window by moving one of its side inward
+super + alt + shift + {h,j,k,l}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# move a floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+

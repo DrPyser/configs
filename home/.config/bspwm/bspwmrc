@@ -1,0 +1,20 @@
+#! /usr/bin/env sh
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+if [ xrandr --listmonitors | grep -w 'HDMI-2' ]; then
+	bspc monitor HDMI-2 -d 'HDMI-2:1';
+fi
+
+bspc config focus_follows_pointer true
+bspc config pointer_modifier mod1
+bspc config pointer_action1 resize_side
+bspc config pointer_action1 resize_corner
+bspc config pointer_action3 move
+
+bspc rule -a Firefox desktop=^2
+
+# polybar -l info example 2>/tmp/polybar.log
+
+systemctl --user import-environment;
+systemctl --user start wm.target

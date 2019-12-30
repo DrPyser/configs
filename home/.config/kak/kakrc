@@ -1,0 +1,27 @@
+try %{ source "%val{config}/nix.kak" }
+try %{ source "%val{config}/plugins/plug.kak/rc/plug.kak" }
+
+plug "andreyorst/fzf.kak"
+
+plug "andreyorst/smarttab.kak" defer smarttab %{
+	set-option global softtabstop 4
+} config %{
+	hook global WinSetOption filetype=nix %{
+		smarttab
+		set-option buffer tabstop 2
+	}
+	hook global WinSetOption filetype=python %{
+		smarttab
+		set-option buffer tabstop 4
+	}
+	hook global WinSetOption filetype=makefile %{
+		noexpandtab
+	}
+}
+
+set-option global tabstop 4
+
+add-highlighter global/wrapping wrap -marker >
+add-highlighter global/matching show-matching
+
+map global normal <c-p> ': fzf-mode<ret>'

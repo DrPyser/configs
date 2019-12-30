@@ -1,0 +1,11 @@
+[Unit]
+Description=Simple Hotkey Daemon
+
+[Service]
+#Environment=SHELL='/run/current-system/sw/bin/bash'
+ExecStart=/run/current-system/sw/bin/sxhkd
+Restart=always
+
+[Install]
+WantedBy=xsession.target
+
