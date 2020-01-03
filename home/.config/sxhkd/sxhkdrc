@@ -21,6 +21,13 @@ XF86MonBrightnessUp
 XF86MonBrightnessDown
 	brightnessctl s 5%-
 
+XF86AudioLowerVolume
+	amixer sset Master 5%-
+
+XF86AudioRaiseVolume
+	amixer sset Master 5%+
+
+
 super + shift + r
 	bspc rule \* -o state=floating sticky=on focus=on; st sudo nixos-rebuild switch
 	
