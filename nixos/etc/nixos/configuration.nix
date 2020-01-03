@@ -8,20 +8,16 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-			# graphical interface config
-			./graphical.nix
-			# misc services
-			./services.nix
+      # graphical interface config
+      ./graphical.nix
+      # misc services
+      ./services.nix
     ];
 
   #hardware settings
   hardware.brightnessctl.enable = true;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.package = pkgs.bluezFull;
-  hardware.bluetooth.extraConfig = "
-    [General]
-    Enable=Source,Sink,Media,Socket
-  ";
 
   # configuration for disk encryption
   boot.initrd.luks.devices = [
@@ -36,7 +32,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.device = "/dev/nvme0n1p1";
-	boot.plymouth.enable = true;
+  boot.plymouth.enable = true;
 
   networking.hostName = "drpyser-thinkpad"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -54,13 +50,7 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-#  i18n = {
-#    consoleFont = "Lat2-Terminus16";
-#    consoleKeyMap = "fr";
-#    defaultLocale = "en_CA.UTF-8";
-#  };
-#
-	i18n.consoleUseXkbConfig = true;
+  i18n.consoleUseXkbConfig = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -112,8 +102,8 @@
   AllowUsers drpyser@192.168.0.0/16
   '';
 
-	# ssh client config
-	programs.ssh.startAgent = true;
+  # ssh client config
+  programs.ssh.startAgent = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
