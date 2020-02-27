@@ -2,7 +2,7 @@
 Description=bspwm desktop manager
 
 [Service]
-ExecStart=/run/current-system/sw/bin/btops
+ExecStart=/usr/bin/env btops
 Restart=always
 
 [Install]

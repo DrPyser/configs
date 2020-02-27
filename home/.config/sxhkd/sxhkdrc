@@ -1,12 +1,12 @@
 super + Return
-	st
+	alacritty
 
 super + shift + Return
-	bspc rule -a \* -o state=floating sticky=on focus=on; st
+	bspc rule -a \* -o state=floating sticky=on focus=on; alacritty
 
 super + alt + Return
 	bspc rule -a \* -o state=floating sticky=on focus=on;\ 
-	st sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x 2>&1'
+	alacritty sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x 2>&1'
 
 super + @space
 	bspc rule -a \* -o focus=on; dmenu_run -b
@@ -27,18 +27,13 @@ XF86AudioLowerVolume
 XF86AudioRaiseVolume
 	amixer sset Master 5%+
 
-
-super + shift + r
-	bspc rule \* -o state=floating sticky=on focus=on; st sudo nixos-rebuild switch
-	
-
 XF86Bluetooth
 	state=$(bluetoothctl -- show | grep -Eoi 'powered: (yes|no)' | cut -d' ' -f2)\
 	case $state in "yes") bluetoothctl -- power off;; "no") bluetoothctl -- power on;; *) echo "unknown bluetooth power state" >2; bluetoothctl -- power on;; esac
 	
 
 super + Delete
-	case $(echo -e 'poweroff\nreboot\nsuspend\n' | dmenu) in poweroff) systemctl poweroff;; suspend) systemctl suspend;; reboot) systemctl reboot;; esac
+	case $(echo -e 'poweroff\nreboot\nsuspend\nlock\n' | dmenu) in poweroff) systemctl poweroff;; suspend) systemctl suspend;; reboot) systemctl reboot;; lock) i3lock -c '000000';; esac
 
 #
 # bspwm hotkeys
@@ -96,6 +91,10 @@ super + {_,shift + }c
 super + @bracket{left,right}
 	bspc desktop -f {prev,next}.local
 
+# focus the next/previous monitor
+super + shift + @bracket{left,right}
+	bspc monitor -f {prev,next}
+
 # focus the last node/desktop
 super + {@dead_grave,Tab}
 	bspc {node,desktop} -f last
@@ -106,18 +105,18 @@ super + {o,i}
 	bspc node {older,newer} -f; \
 	bspc wm -h on
 
-# focus or send to the given desktop
+# focus or send to the given desktop in the focused monitor
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '^{1-9,10}'
+	bspc {desktop -f,node -d} 'focused:^{1-9,10}'
 
 super + {_,shift + }d
-	DESKTOP=$(for m in $(bspc query -M --names); do bspc query -D --names -m $m | xargs -Id echo "$m:d"; done | dmenu -b | cut -d':' -f2);\
+	DESKTOP=$(for m in $(bspc query -M --names); do bspc query -D --names -m $m | xargs -Id echo "$m:d"; done | dmenu -b | cut -d':' -f2-);\
 	bspc {desktop -f,node focused -d} $DESKTOP
 
 
 # focus window selected by title
 super + v
-	WINDOW=$(python $HOME/bin/select_window.py -b -l 10 | tail -n1);\
+	WINDOW=$(python3.7 $HOME/bin/select_window.py -b -l 10 | tail -n1);\
 	ERROR=$(bspc node -f $WINDOW 2>&1) || notify-send "Error!" "$WINDOW $ERROR"
 
 

@@ -2,8 +2,8 @@
 Description=Simple Hotkey Daemon
 
 [Service]
-#Environment=SHELL='/run/current-system/sw/bin/bash'
-ExecStart=/run/current-system/sw/bin/sxhkd
+#Environment=SHELL='/usr/bin/env bash'
+ExecStart=/usr/bin/env sxhkd
 Restart=always
 
 [Install]

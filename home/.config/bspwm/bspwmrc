@@ -1,9 +1,17 @@
-#! /usr/bin/env sh
+#! /usr/bin/env bash
 
-bspc monitor -d I II III IV V VI VII VIII IX X
+sh $HOME/.config/bspwm/monitors.sh
 
-if [ xrandr --listmonitors | grep -w 'HDMI-2' ]; then
-	bspc monitor HDMI-2 -d 'HDMI-2:1';
+if xrandr --listmonitors | grep -w 'eDP-1'; then
+	bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+fi
+if xrandr --listmonitors | grep -w 'HDMI-2'; then
+	bspc monitor HDMI-2 -d 'HDMI-2/1';
+fi
+
+if xrandr --listmonitors | grep -w 'DP-1'; then
+	xrandr --addmode DP-1 1920x1080
+	bspc monitor DP-1 -d 'DP-1/1';
 fi
 
 bspc config focus_follows_pointer true
@@ -12,9 +20,13 @@ bspc config pointer_action1 resize_side
 bspc config pointer_action1 resize_corner
 bspc config pointer_action3 move
 
-bspc rule -a Firefox desktop=^2
+bspc rule -a Firefox desktop=web
 
-# polybar -l info example 2>/tmp/polybar.log
+. $HOME/.bash_profile
+printenv | grep -e PATH -e GOPATH >> /tmp/bspwm.log
+systemctl --user import-environment PATH GOPATH
+systemctl --user restart wm.target
+systemctl --user restart --wait polybar@eDP-1 polybar@DP-1 polybar@HDMI-2 
+systemctl --user restart btops sxhkd dunst
 
-systemctl --user import-environment;
-systemctl --user start wm.target
+export _JAVA_AWT_WM_NONREPARENTING=1

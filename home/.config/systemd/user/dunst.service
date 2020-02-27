@@ -2,7 +2,7 @@
 Description=Dunst notification daemon
 
 [Service]
-ExecStart=/run/current-system/sw/bin/dunst
+ExecStart=/usr/bin/env dunst
 Restart=always
 
 [Install]

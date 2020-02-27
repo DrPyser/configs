@@ -17,6 +17,11 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
 	hook global WinSetOption filetype=makefile %{
 		noexpandtab
 	}
+	hook global WinSetOption filetype=json %{
+		expandtab
+		set-option buffer tabstop 2
+		set-option buffer indentwidth 2
+	}
 }
 
 set-option global tabstop 4

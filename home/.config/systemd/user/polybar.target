@@ -1,0 +1,3 @@
+[Unit]
+Requires=polybar@eDP-1.service polybar@DP-1.service polybar@HDMI-2.service
+WantedBy=xsession.target
