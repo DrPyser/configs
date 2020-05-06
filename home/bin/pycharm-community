@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+export _JAVA_AWT_WM_NONREPARENTING=1
+/usr/bin/env /snap/bin/pycharm-community

@@ -256,7 +256,7 @@ label = RAM %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = wlp61s0
+interface = wlp4s0
 interval = 3.0
 
 format-connected = <ramp-signal> <label-connected>

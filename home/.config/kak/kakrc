@@ -22,6 +22,11 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
 		set-option buffer tabstop 2
 		set-option buffer indentwidth 2
 	}
+	hook global WinSetOption filetype=yaml %{
+		expandtab
+		set-option buffer tabstop 2
+		set-option buffer indentwidth 2
+	}
 }
 
 set-option global tabstop 4

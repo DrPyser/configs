@@ -30,3 +30,4 @@ systemctl --user restart --wait polybar@eDP-1 polybar@DP-1 polybar@HDMI-2
 systemctl --user restart btops sxhkd dunst
 
 export _JAVA_AWT_WM_NONREPARENTING=1
+setxkbmap -option caps:super

@@ -1,0 +1,6 @@
+#! /bin/bash
+
+for m in $(bspc query -M --names); do
+    bspc query -D --names -m $m | xargs -Id echo "$m:d";
+done | dmenu -b | { IFS=\: read monitor desktop; bspc query -D -m $monitor -d $desktop; }
+
