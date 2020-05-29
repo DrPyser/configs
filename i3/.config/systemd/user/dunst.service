@@ -1,0 +1,10 @@
+[Unit]
+Description=Dunst notification daemon
+
+[Service]
+ExecStart=/run/current-system/sw/bin/dunst
+Restart=always
+
+[Install]
+WantedBy=xsession.target
+

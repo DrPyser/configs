@@ -1,0 +1,10 @@
+[Unit]
+Description=bspwm desktop manager
+
+[Service]
+ExecStart=/run/current-system/sw/bin/btops
+Restart=always
+
+[Install]
+WantedBy=wm.target
+
