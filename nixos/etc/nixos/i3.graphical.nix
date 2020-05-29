@@ -1,17 +1,14 @@
 { config, pkgs, ... }:
 {
   environment.systemPackages = [
-    pkgs.bspwm
-    pkgs.sxhkd
     pkgs.dmenu
-    pkgs.st
     pkgs.xsel
     #pkgs.xev
     pkgs.xdotool
-    (pkgs.polybar.override { pulseSupport = true; })
     pkgs.libnotify
     pkgs.dunst
-		pkgs.btops
+		pkgs.i3
+		pkgs.i3blocks
   ];
 
   # Enable the X11 windowing system.
@@ -23,8 +20,6 @@
   services.xserver.libinput.enable = true;
 
   services.xserver.desktopManager.xterm.enable = false;
-  services.xserver.windowManager.bspwm.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
   services.xserver.windowManager.i3.enable = true;
-  services.xserver.windowManager.default = "bspwm";
+  services.xserver.windowManager.default = "i3";
 }

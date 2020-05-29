@@ -24,7 +24,5 @@
 
   services.xserver.desktopManager.xterm.enable = false;
   services.xserver.windowManager.bspwm.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
-  services.xserver.windowManager.i3.enable = true;
   services.xserver.windowManager.default = "bspwm";
 }

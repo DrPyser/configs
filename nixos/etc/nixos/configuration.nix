@@ -12,6 +12,9 @@
       ./graphical.nix
       # misc services
       ./services.nix
+      ./games.nix
+      ./python.nix
+      ./fs.nix
     ];
 
   #hardware settings
@@ -38,6 +41,10 @@
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
+  #environment.systemPackages = with pkgs; [ lxqt.lxqt-policykit ]; # provides a default authentification client for policykit
+  services.gvfs.enable = true; # enables gvfs
+
+
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
@@ -55,12 +62,17 @@
   # Set your time zone.
   time.timeZone = "America/New_York";
 
+	nixpkgs.config.allowUnfree = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    pkgs.samba4Full
+    lxqt.lxqt-policykit 
     pkgs.wget
     pkgs.vim 
     pkgs.firefox 
+    pkgs.brave
     pkgs.git 
     pkgs.htop 
     pkgs.networkmanagerapplet 
@@ -85,6 +97,8 @@
     pkgs.gnumake
     pkgs.python38Full
     pkgs.tmux
+		pkgs.aria2
+		pkgs.ncat
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -97,7 +111,7 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.openssh.ports = [4444];
-  services.openssh.listenAddresses = [{ addr = "192.168.0.111"; port = 4444; }];
+  services.openssh.listenAddresses = [{ addr = "192.168.2.15"; port = 4444; }];
   services.openssh.extraConfig = ''
   AllowUsers drpyser@192.168.0.0/16
   '';
@@ -133,11 +147,13 @@
 
   services.nixosManual.showManual = true;
 
+  programs.adb.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.drpyser = {
     createHome = true;
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "audio" "video"]; # Enable ‘sudo’ for the user.
+    extraGroups = ["adbusers" "wheel" "networkmanager" "audio" "video"]; # Enable ‘sudo’ for the user.
   };
 
   # This value determines the NixOS release with which your system is to be
