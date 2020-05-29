@@ -11,10 +11,14 @@ bspc config pointer_modifier mod1
 bspc config pointer_action1 resize_side
 bspc config pointer_action1 resize_corner
 bspc config pointer_action3 move
+bspc config external_rules_command "$(which external_rules)"
 
 bspc rule -a Firefox desktop=^2
+bspc rule -a Brave-browser desktop=^2
 
 # polybar -l info example 2>/tmp/polybar.log
 
+feh --bg-fill ~/Downloads/1280px-Mandel_zoom_00_mandelbrot_set.jpg
+
 systemctl --user import-environment;
-systemctl --user start wm.target
+systemctl --user restart wm.target

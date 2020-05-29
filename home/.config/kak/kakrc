@@ -1,27 +1,74 @@
 try %{ source "%val{config}/nix.kak" }
 try %{ source "%val{config}/plugins/plug.kak/rc/plug.kak" }
+try %{ source "%val{runtime}/rc/filetype/javascript.kak" }
+try %{ source "%val{runtime}/rc/filetype/python.kak" }
+try %{ source "%val{runtime}/rc/filetype/yaml.kak" }
+try %{ source "%val{runtime}/rc/filetype/nix.kak" }
 
 plug "andreyorst/fzf.kak"
 
 plug "andreyorst/smarttab.kak" defer smarttab %{
 	set-option global softtabstop 4
 } config %{
-	hook global WinSetOption filetype=nix %{
+	hook global winsetoption filetype=nix %{
 		smarttab
 		set-option buffer tabstop 2
 	}
-	hook global WinSetOption filetype=python %{
+	hook global winsetoption filetype=yaml %{
+		smarttab
+		set-option buffer tabstop 2
+	}
+	hook global winsetoption filetype=python %{
 		smarttab
 		set-option buffer tabstop 4
 	}
-	hook global WinSetOption filetype=makefile %{
+	hook global winsetoption filetype=makefile %{
 		noexpandtab
 	}
 }
 
-set-option global tabstop 4
+plug "alexherbo2/surround.kak" defer surround %{
+	map global user s ': surround<ret>' -docstring 'Enter surround mode'
+}
 
-add-highlighter global/wrapping wrap -marker >
+plug "git@github.com:alexherbo2/auto-pairs.kak.git" defer auto-pairs %{
+	hook global WinCreate .* %{
+  	  auto-pairs-enable
+	}
+}
+
+set-option global tabstop 2
+set-option global indentwidth 2
+
+def -override reload_config %{
+	try %{ source "%val{config}/kakrc" }
+}
+
+hook global WinSetOption filetype=javascript %{
+	set buffer lintcmd './node_modules/.bin/eslint --format=node_modules/eslint-formatter-kakoune -c .eslintrc.yml'
+	lint-enable
+	set buffer formatcmd "./node_modules/.bin/prettier --stdin-filepath ${kak_buffile}"
+}
+
+add-highlighter global/wrapping wrap -marker '>> '
 add-highlighter global/matching show-matching
 
+hook global WinCreate ^[^*]+$ %{editorconfig-load}
+hook global BufOpenFile .* editorconfig-load
+hook global BufNewFile .* editorconfig-load
+
 map global normal <c-p> ': fzf-mode<ret>'
+
+def mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
+
+def ide %{
+  rename-client main
+  set-option global jumpclient main
+
+  new rename-client tools
+  set-option global toolsclient tools
+
+  new rename-client docs
+  set-option global docsclient docs
+}
+

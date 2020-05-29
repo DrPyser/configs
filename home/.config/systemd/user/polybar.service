@@ -1,10 +1,12 @@
 [Unit]
 Description=Polybar
+PartOf=wm.target
 
 [Service]
 ExecStart=/run/current-system/sw/bin/polybar -l info example
 Restart=always
 ExecReload=/run/current-system/sw/bin/kill -HUP $MAINPID
+
 [Install]
 WantedBy=wm.target
 

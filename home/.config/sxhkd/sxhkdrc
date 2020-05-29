@@ -6,14 +6,23 @@ super + shift + Return
 
 super + alt + Return
 	bspc rule -a \* -o state=floating sticky=on focus=on;\ 
-	st sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x 2>&1'
+	st sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x 2>&1 | less'
+
+super + alt + shift + Return
+	bspc rule -a \* -o state=floating sticky=on focus=on;\ 
+	st sh -c 'tac ~/.bash_history | fzf -m | $SHELL -x | xsel -b -i'
 
 super + @space
 	bspc rule -a \* -o focus=on; dmenu_run -b
 
+super + shift + @space
+	bspc rule -a \* -o focus=on; st $(dmenu_path | dmenu -b)
+
+super + shift + p
+	find .password-store/ -type f | xargs realpath --relative-to .password-store | sed 's/.gpg//' | dmenu -l 5 | xargs pass show | xsel -b -i && notify-send 'password copied to clipboard'
+
 super + Escape
 	pkill -USR1 -x sxhkd
-
 
 XF86MonBrightnessUp
 	brightnessctl s 5%+
@@ -27,9 +36,11 @@ XF86AudioLowerVolume
 XF86AudioRaiseVolume
 	amixer sset Master 5%+
 
+XF86AudioMute
+	amixer sset Master toggle
 
 super + shift + r
-	bspc rule \* -o state=floating sticky=on focus=on; st sudo nixos-rebuild switch
+	bspc rule -a \* -o state=floating sticky=on focus=on; st sudo nixos-rebuild switch
 	
 
 XF86Bluetooth
@@ -38,7 +49,7 @@ XF86Bluetooth
 	
 
 super + Delete
-	case $(echo -e 'poweroff\nreboot\nsuspend\n' | dmenu) in poweroff) systemctl poweroff;; suspend) systemctl suspend;; reboot) systemctl reboot;; esac
+	sh $HOME/bin/system.sh
 
 #
 # bspwm hotkeys
@@ -46,7 +57,7 @@ super + Delete
 
 # quit/restart bspwm
 super + alt + {q,r}
-	bspc {quit,wm -r}
+	bspc {quit,wm -r; systemctl --user restart wm.target}
 
 # close and kill
 super + {_,shift + }w
