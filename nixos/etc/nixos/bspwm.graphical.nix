@@ -24,5 +24,5 @@
 
   services.xserver.desktopManager.xterm.enable = false;
   services.xserver.windowManager.bspwm.enable = true;
-  services.xserver.windowManager.default = "bspwm";
+  services.xserver.displayManager.defaultSession = "none+bspwm";
 }

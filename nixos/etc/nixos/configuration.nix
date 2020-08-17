@@ -14,22 +14,23 @@
       ./services.nix
       ./games.nix
       ./python.nix
+      ./docker.nix
       ./fs.nix
+#      ./hyperdrive.nix
     ];
 
   #hardware settings
-  hardware.brightnessctl.enable = true;
+  #hardware.brightnessctl.enable = true;
   hardware.bluetooth.enable = true;
   hardware.bluetooth.package = pkgs.bluezFull;
 
   # configuration for disk encryption
-  boot.initrd.luks.devices = [
-    {
+  boot.initrd.luks.devices = {
       name = "root";
       device = "/dev/nvme0n1p2";
       preLVM = true;
-    }
-  ];
+  };
+
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -57,16 +58,17 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  i18n.consoleUseXkbConfig = true;
+  console.useXkbConfig = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-	nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    pkgs.brightnessctl
     pkgs.samba4Full
     lxqt.lxqt-policykit 
     pkgs.wget
@@ -144,7 +146,7 @@
   #services.xserver.desktopManager.xterm.enable = false;
   #services.xserver.windowManager.bspwm.enable = true;
   #services.xserver.windowManager.default = "bspwm";
-
+  services.xserver.displayManager.defaultSession = "none+bspwm";
   services.nixosManual.showManual = true;
 
   programs.adb.enable = true;

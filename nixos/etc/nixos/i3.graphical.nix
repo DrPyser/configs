@@ -21,5 +21,5 @@
 
   services.xserver.desktopManager.xterm.enable = false;
   services.xserver.windowManager.i3.enable = true;
-  services.xserver.windowManager.default = "i3";
+  services.xserver.displayManager.defaultSession = "none+i3";
 }
