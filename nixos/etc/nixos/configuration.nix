@@ -25,8 +25,7 @@
   hardware.bluetooth.package = pkgs.bluezFull;
 
   # configuration for disk encryption
-  boot.initrd.luks.devices = {
-      name = "root";
+  boot.initrd.luks.devices.root = {
       device = "/dev/nvme0n1p2";
       preLVM = true;
   };
@@ -44,6 +43,7 @@
 
   #environment.systemPackages = with pkgs; [ lxqt.lxqt-policykit ]; # provides a default authentification client for policykit
   services.gvfs.enable = true; # enables gvfs
+  programs.gnupg.agent.enable = true;
 
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
@@ -65,9 +65,13 @@
 
   nixpkgs.config.allowUnfree = true;
 
+	#pinentry-program /run/current-system/sw/bin/pinentry-curses
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    pkgs.wineWowPackages.stable
+    pkgs.pinentry
     pkgs.brightnessctl
     pkgs.samba4Full
     lxqt.lxqt-policykit 
