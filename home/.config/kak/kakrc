@@ -8,49 +8,61 @@ try %{ source "%val{runtime}/rc/filetype/nix.kak" }
 plug "andreyorst/fzf.kak"
 
 plug "andreyorst/smarttab.kak" defer smarttab %{
-	set-option global softtabstop 4
+  set-option global softtabstop 4
 } config %{
-	hook global winsetoption filetype=nix %{
-		smarttab
-		set-option buffer tabstop 2
-	}
-	hook global winsetoption filetype=yaml %{
-		smarttab
-		set-option buffer tabstop 2
-	}
-	hook global winsetoption filetype=python %{
-		smarttab
-		set-option buffer tabstop 4
-	}
-	hook global winsetoption filetype=makefile %{
-		noexpandtab
-	}
+  hook global winsetoption filetype=nix %{
+    smarttab
+    set-option buffer tabstop 2
+  }
+  hook global winsetoption filetype=yaml %{
+    smarttab
+    set-option buffer tabstop 2
+  }
+  hook global winsetoption filetype=python %{
+    smarttab
+    set-option buffer tabstop 4
+    set-option buffer indentwidth 4
+  }
+  hook global winsetoption filetype=makefile %{
+    noexpandtab
+  }
 }
 
 plug "alexherbo2/surround.kak" defer surround %{
-	map global user s ': surround<ret>' -docstring 'Enter surround mode'
+  map global user s ': surround<ret>' -docstring 'Enter surround mode'
 }
 
 plug "git@github.com:alexherbo2/auto-pairs.kak.git" defer auto-pairs %{
-	hook global WinCreate .* %{
-  	  auto-pairs-enable
-	}
+  hook global WinCreate .* %{
+      auto-pairs-enable
+  }
 }
 
 set-option global tabstop 2
 set-option global indentwidth 2
 
 def -override reload_config %{
-	try %{ source "%val{config}/kakrc" }
+  try %{ source "%val{config}/kakrc" }
+}
+
+hook global WinSetOption filetype=python %{
+  set-option buffer indentwidth 4
 }
 
 hook global WinSetOption filetype=javascript %{
-	set buffer lintcmd './node_modules/.bin/eslint --format=node_modules/eslint-formatter-kakoune -c .eslintrc.yml'
-	lint-enable
-	set buffer formatcmd "./node_modules/.bin/prettier --stdin-filepath ${kak_buffile}"
+  set buffer lintcmd './node_modules/.bin/eslint --format=node_modules/eslint-formatter-kakoune -c .eslintrc.yml'
+  lint-enable
+  set buffer formatcmd "./node_modules/.bin/prettier --stdin-filepath ${kak_buffile}"
 }
 
-add-highlighter global/wrapping wrap -marker '>> '
+hook global WinSetOption filetype=markdown %{
+  remove-highlighter buffer/wrapping
+  add-highlighter buffer/wrapping wrap -width 120 -marker '⮩ ' -word
+}
+
+remove-highlighter global/wrapping
+add-highlighter global/wrapping wrap -marker '⮩ '
+remove-highlighter global/matching
 add-highlighter global/matching show-matching
 
 hook global WinCreate ^[^*]+$ %{editorconfig-load}
