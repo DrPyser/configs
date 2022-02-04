@@ -2,3 +2,4 @@
 *.kak.*
 **/kak/plugins
 **/.git
+*.bak
