@@ -1,30 +1,31 @@
+### Setup graphical configuration
 { config, pkgs, ... }:
 {
-  environment.systemPackages = [
-    pkgs.bspwm
-    pkgs.sxhkd
-    pkgs.dmenu
-    pkgs.st
-    pkgs.xsel
-    #pkgs.xev
-    pkgs.xdotool
-    (pkgs.polybar.override { pulseSupport = true; })
-    pkgs.libnotify
-    pkgs.dunst
-		pkgs.btops
+  # import the module for the wm we want
+  imports = [
+    ./i3.graphical.nix
   ];
 
-  # Enable the X11 windowing system.
+  # wm-independent configuration/overrides
+
+  # Xorg configuration
   services.xserver.enable = true;
   services.xserver.layout = "ca";
-  services.xserver.xkbOptions = "caps:super";
+  # services.xserver.xkbOptions = "caps:super";
+  # https://man.archlinux.org/man/DPMSSetTimeouts.3
+  services.xserver.serverFlagsSection = ''
+    Option "StandbyTime" "10"
+    Option "SuspendTime" "60"
+    Option "OffTime" "360"
+    Option "BlankTime" "0"
+  '';
 
   # Enable touchpad support.
   services.xserver.libinput.enable = true;
 
   services.xserver.desktopManager.xterm.enable = false;
-  services.xserver.windowManager.bspwm.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
-  services.xserver.windowManager.i3.enable = true;
-  services.xserver.displayManager.defaultSession = "none+bspwm";
+#  services.xserver.windowManager.bspwm.enable = true;
+#  services.xserver.windowManager.dwm.enable = true;
+#  services.xserver.windowManager.i3.enable = true;
+  services.xserver.displayManager.defaultSession = "none+i3";
 }

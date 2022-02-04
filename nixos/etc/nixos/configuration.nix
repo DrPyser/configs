@@ -16,6 +16,9 @@
       ./python.nix
       ./docker.nix
       ./fs.nix
+      ./ipfs.nix
+      ./keybase.nix
+      ./wireguard.nix
 #      ./hyperdrive.nix
     ];
 
@@ -38,13 +41,20 @@
   boot.plymouth.enable = true;
 
   networking.hostName = "drpyser-thinkpad"; # Define your hostname.
+  networking.extraHosts = ''
+  155.138.159.149	viachicago.vultr
+  155.138.145.227 endlessendeavor.vultr
+  # for ssh tunneling
+  127.0.0.2	viachicago.local ipfs.local
+  127.0.0.1	viachicago.local localhost
+  '';
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
   #environment.systemPackages = with pkgs; [ lxqt.lxqt-policykit ]; # provides a default authentification client for policykit
   services.gvfs.enable = true; # enables gvfs
   programs.gnupg.agent.enable = true;
-
+  services.gnome3.gnome-keyring.enable = true;
 
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
@@ -65,46 +75,41 @@
 
   nixpkgs.config.allowUnfree = true;
 
-	#pinentry-program /run/current-system/sw/bin/pinentry-curses
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    pkgs.wineWowPackages.stable
-    pkgs.pinentry
-    pkgs.brightnessctl
-    pkgs.samba4Full
+    # pkgs.wineWowPackages.stable
+    pinentry
+    brightnessctl
+    samba4Full
     lxqt.lxqt-policykit 
-    pkgs.wget
-    pkgs.vim 
-    pkgs.firefox 
-    pkgs.brave
-    pkgs.git 
-    pkgs.htop 
-    pkgs.networkmanagerapplet 
-    pkgs.which
-    pkgs.bspwm
-    pkgs.sxhkd
-    pkgs.dmenu
-    pkgs.st
-    pkgs.xsel
-    #pkgs.xev
-    pkgs.xdotool
-    (pkgs.polybar.override { pulseSupport = true; })
-    pkgs.kakoune
-    pkgs.kak-lsp
-    pkgs.libnotify
-    pkgs.dunst
-    pkgs.gnupg
-    pkgs.pass
-    pkgs.stow
-    pkgs.tree
-    pkgs.file
-    pkgs.gnumake
-    pkgs.python38Full
-    pkgs.tmux
-		pkgs.aria2
-		pkgs.ncat
+    wget
+    vim 
+    firefox 
+    (brave.override { })
+    git 
+    htop 
+    networkmanagerapplet 
+    which
+    dmenu
+    st
+    alacritty
+    xsel
+    xdotool
+    kakoune
+    kak-lsp
+    libnotify
+    dunst
+    gnupg
+    pass
+    stow
+    tree
+    file
+    gnumake
+    python38Full
+    tmux
+    aria2
+    ncat
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -126,33 +131,15 @@
   programs.ssh.startAgent = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
+  # wireguard port
+  # networking.firewall.allowedUDPPorts = [ 11408 ];
 
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
   hardware.pulseaudio.package = pkgs.pulseaudioFull;
 
-  ## Enable the X11 windowing system.
-  #services.xserver.enable = true;
-  #services.xserver.layout = "ca";
-  #services.xserver.xkbOptions = "caps:super";
-#
-  ## Enable touchpad support.
-  #services.xserver.libinput.enable = true;
-#
-  #services.xserver.desktopManager.xterm.enable = false;
-  #services.xserver.windowManager.bspwm.enable = true;
-  #services.xserver.windowManager.default = "bspwm";
-  services.xserver.displayManager.defaultSession = "none+bspwm";
-  services.nixosManual.showManual = true;
-
+  # android support
   programs.adb.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -161,12 +148,13 @@
     isNormalUser = true;
     extraGroups = ["adbusers" "wheel" "networkmanager" "audio" "video"]; # Enable ‘sudo’ for the user.
   };
+  security.pam.services.drpyser.enableGnomeKeyring = true;
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "19.09"; # Did you read the comment?
+  system.stateVersion = "21.11"; # Did you read the comment?
 
 }
 
