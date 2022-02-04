@@ -14,7 +14,7 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
   set-option global softtabstop 4
 } config %{
   hook global winsetoption filetype=nix %{
-    smarttab
+    expandtab
     set-option buffer tabstop 2
   }
   hook global winsetoption filetype=yaml %{
