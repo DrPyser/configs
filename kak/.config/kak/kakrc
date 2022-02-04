@@ -5,6 +5,9 @@ try %{ source "%val{runtime}/rc/filetype/python.kak" }
 try %{ source "%val{runtime}/rc/filetype/yaml.kak" }
 try %{ source "%val{runtime}/rc/filetype/nix.kak" }
 
+map global normal <#> ': comment-line<ret>'
+map global normal <a-#> ': comment-block<ret>'
+
 plug "andreyorst/fzf.kak"
 
 plug "andreyorst/smarttab.kak" defer smarttab %{
@@ -19,7 +22,7 @@ plug "andreyorst/smarttab.kak" defer smarttab %{
     set-option buffer tabstop 2
   }
   hook global winsetoption filetype=python %{
-    smarttab
+    expandtab
     set-option buffer tabstop 4
     set-option buffer indentwidth 4
   }
@@ -55,6 +58,12 @@ hook global WinSetOption filetype=javascript %{
   set buffer formatcmd "./node_modules/.bin/prettier --stdin-filepath ${kak_buffile}"
 }
 
+hook global WinSetOption filetype=css %{
+  lint-enable
+  set buffer comment_block_begin "/*"
+  set buffer comment_block_end "*/"
+}
+
 hook global WinSetOption filetype=markdown %{
   remove-highlighter buffer/wrapping
   add-highlighter buffer/wrapping wrap -width 120 -marker '⮩ ' -word
@@ -83,4 +92,10 @@ def ide %{
   new rename-client docs
   set-option global docsclient docs
 }
+
+
+def -override insert_unicode -params 1 %{
+  execute-keys '! grep -i "$1" ~/.config/kak/unicode.txt | cut -d\; -f1 | ascii2uni -q -a R -p' 
+}
+
 

@@ -1,3 +1,4 @@
 *.swp
 *.kak.*
-home/.config/kak/plugins/*
+**/kak/plugins
+**/.git
